@@ -29,11 +29,54 @@ values
 ;
 
 CREATE TABLE "audit_types" (
-"id" INT PRIMARY KEY IDENTITY,
-"name" varchar(30) NOT NULL,
-"status" varchar(20) Check ("status" in ('active', 'inactive'))
+	"id" INT PRIMARY KEY IDENTITY,
+	"name" varchar(30) NOT NULL,
+	"status" varchar(20) Check ("status" in ('active', 'inactive'))
 )
 ;
+
+CREATE TABLE "checklist_template" (
+	"id" INT PRIMARY KEY,
+	"version" INT,
+	"code" varchar(50),
+	"name" varchar(100),
+	"created date" datetime,
+)
+;
+
+CREATE TABLE "scoring_method" (
+	"id" INT PRIMARY KEY IDENTITY,
+	"score" varchar(30) NOT NULL
+)
+;
+
+INSERT INTO "scoring_method"
+	values
+	('Yes')
+	('No')
+	(1)
+	(2)
+	(3)
+	(4)
+	(5)
+	('Pass')
+	('Fail')
+	('Accepted')
+	('Rejected')
+	('Complies') 
+	('Does not comply')
+	;
+
+CREATE TABLE "checklist_item" (
+	"id" INT PRIMARY KEY,
+	"checklist_template_id" INT FOREIGN KEY REFERENCES checklist_template(id),
+	"numbering" varchar(15),
+	"description" varchar(1000),
+	"references" varchar(300),
+	"scoring" INT FOREIGN KEY references scoring_method(id)
+)
+;
+
 
 CREATE TABLE "audits" (
 	"id" INT PRIMARY KEY IDENTITY,
@@ -45,10 +88,16 @@ CREATE TABLE "audits" (
 	"description" varchar(1500),
 	"previous_audit" INT FOREIGN KEY REFERENCES audits(id),
 	"next_audit" INT FOREIGN KEY REFERENCES audits(id),
-	"status" varchar(20) Check ("status" in ('Started', 'In Progress', 'Completed', 'Closed'))
-		
+	"status" varchar(20) Check ("status" in ('Started', 'In Progress', 'Completed', 'Closed')
 	)
 ;
+
+CREATE TABLE "audit_checklists" (
+	"id" INT PRIMARY KEY IDENTITY,
+	"checklist_template_id" INT
+	)
+;
+
 
 GO
  
