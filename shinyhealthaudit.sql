@@ -52,18 +52,18 @@ CREATE TABLE "scoring_method" (
 
 INSERT INTO "scoring_method"
 	values
-	('Yes')
-	('No')
-	(1)
-	(2)
-	(3)
-	(4)
-	(5)
-	('Pass')
-	('Fail')
-	('Accepted')
-	('Rejected')
-	('Complies') 
+	('Yes'),
+	('No'),
+	(1),
+	(2),
+	(3),
+	(4),
+	(5),
+	('Pass'),
+	('Fail'),
+	('Accepted'),
+	('Rejected'),
+	('Complies') ,
 	('Does not comply')
 	;
 
