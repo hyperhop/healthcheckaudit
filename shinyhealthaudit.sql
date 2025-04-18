@@ -22,7 +22,6 @@ values
 	('Cindy', 'Centaur', 'Worker', 'cindy.centaur@shinyhealth.com'),
 	('Denise', 'Dragon', 'Worker', 'denise.dragon@shinyhealth.com'),
 	('Barnabas', 'Soon', 'Manager',	'barnabas.soon@shinyhealth.com'),
-	('Shunnie',	'Xie', 'Manager', 'shunnie.xie@shinyhealth.com')
 ;
 
 CREATE TABLE "audit_types" (
