@@ -29,7 +29,7 @@ values
 CREATE TABLE "audit_types" (
 	"id" INT PRIMARY KEY IDENTITY,
 	"name" varchar(30) NOT NULL,
-	"status" varchar(20) Check ("status" in ('Active', 'Inactive')),
+	"status" varchar(20) NOT NULL Check ("status" in ('Active', 'Inactive')),
 	"description" varchar(200)
 )
 ;
@@ -38,7 +38,7 @@ CREATE TABLE "audit_types" (
 --Creates dummy audit type
 INSERT INTO "audit_types"
 values
-	('Basic', 'active', 'Basic audit type')
+	('Basic', 'Active', 'Basic audit type')
 
 -- Checklist templates
 CREATE TABLE "checklist_templates" (
@@ -47,7 +47,7 @@ CREATE TABLE "checklist_templates" (
 	"code" varchar(50) NOT NULL,
 	"name" varchar(100) NOT NULL,
 	"created" datetime NOT NULL,
-	"status" varchar(20) Check ("status" in ('Active', 'Inactive')),
+	"status" varchar(20) NOT NULL Check ("status" in ('Active', 'Inactive')),
 	"description" varchar(200)
 )
 ;
@@ -83,10 +83,11 @@ CREATE TABLE "checklist_item" (
 	"numbering" varchar(15) NOT NULL,
 	"description" varchar(1000) NOT NULL,
 	"references" varchar(300),
-	"scoring" INT FOREIGN KEY references scoring_method(id)
+	"scoring" INT NOT NULL FOREIGN KEY references scoring_method(id)
 )
 ;
 
+--Creates dummy checklist items
 INSERT INTO "checklist_item"
 VAlUES
 	(1, 1, 'Has procedure been documented', 'Checklist 1, Item 1', '1'),
@@ -95,7 +96,7 @@ VAlUES
 -- Audit tables
 CREATE TABLE "audits" (
 	"id" INT PRIMARY KEY IDENTITY,
-	"year" INT NOT NULL,
+	"year" DATE NOT NULL,
 	"type" INT FOREIGN KEY REFERENCES audit_types(id), 
 	"start_date" DATETIME NOT NULL,
 	"end_date" DATETIME,
@@ -103,8 +104,13 @@ CREATE TABLE "audits" (
 	"description" varchar(1500),
 	"previous_audit" INT FOREIGN KEY REFERENCES audits(id),
 	"next_audit" INT FOREIGN KEY REFERENCES audits(id),
-	"status" varchar(20) Check ("status" in ('Started', 'In Progress', 'Completed', 'Closed'))
+	"status" varchar(20) NOT NULL Check ("status" in ('Started', 'In Progress', 'Completed', 'Closed', 'Deleted'))
 	)
+;
+
+INSERT INTO "audits"
+VALUES 
+	(CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, NULL, 'First Audit', 'First audit in the system', NULL, NULL, 'Started'  )
 ;
 
 -- Ability to assign users and roles to the audit.
@@ -124,7 +130,8 @@ CREATE TABLE "audit_checklists" (
 ;
 
 CREATE TABLE "audit_checklist_scores" (
-	"checklist_id" INT FOREIGN KEY REFERENCES audit_checklists(id),
+	"id" INT PRIMARY KEY IDENTITY,
+	"audit_checklist_id" INT FOREIGN KEY REFERENCES audit_checklists(id),
 	"checklist_item" INT FOREIGN KEY REFERENCES checklist_item(id),
 	"score" INT FOREIGN KEY REFERENCES scoring_method(id),
 	"scorer_id" INT FOREIGN KEY REFERENCES users(id),
@@ -138,5 +145,6 @@ CREATE TABLE "audit_attachments" (
 	"attachments" varbinary(max)
 )
 ;
+
 GO
  
